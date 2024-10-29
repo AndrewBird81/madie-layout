@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useBlocker, Blocker } from "react-router-dom";
+import { useBlocker } from "react-router-dom";
 import { MadieDiscardDialog } from "@madie/madie-design-system/dist/react";
 import { routeHandlerStore } from "@madie/madie-util";
 // We have to listen at the top level for navigational changes to block them.
@@ -8,12 +8,13 @@ export interface RouteHandlerState {
   canTravel: boolean;
   pendingRoute: string;
 }
-
+// Required by every single spa application that has internal routing
 const RouteChangePrompt = () => {
   const { updateRouteHandlerState } = routeHandlerStore;
   const [routeHandlerState, setRouteHandlerState] = useState<RouteHandlerState>(
     routeHandlerStore.state
   );
+  const [dialogOpen, setDialogOpen] = useState<boolean>(false);
 
   useEffect(() => {
     const subscription = routeHandlerStore.subscribe(setRouteHandlerState);
@@ -22,41 +23,29 @@ const RouteChangePrompt = () => {
     };
   }, []);
 
-  const [dialogOpen, setDialogOpen] = useState<boolean>(false);
-  let navigate = useNavigate();
-
-  const blocker: Blocker = useBlocker(
-    ({ currentLocation, nextLocation }) => !routeHandlerState.canTravel
-  );
-  useEffect(() => {
-    updateRouteHandlerState({
-      ...routeHandlerState,
-      pendingRoute: blocker?.location?.pathname,
-    });
-  }, [blocker?.location?.pathname]);
-  useEffect(() => {
-    if (routeHandlerState.pendingRoute) {
+  const blocker = useBlocker(({ currentLocation, nextLocation }) => {
+    if (
+      !routeHandlerState?.canTravel &&
+      currentLocation.pathname !== nextLocation.pathname
+    ) {
       setDialogOpen(true);
-      updateRouteHandlerState({
-        canTravel: true,
-        pendingRoute: routeHandlerState.pendingRoute,
-      });
+      return true;
     }
-  }, [routeHandlerState.pendingRoute, setDialogOpen]);
+    setDialogOpen(false);
+    return false;
+  });
 
   const onContinue = () => {
     setDialogOpen(false);
-    const currentRoute = routeHandlerState.pendingRoute;
     updateRouteHandlerState({
       canTravel: true,
       pendingRoute: "",
     });
-    navigate(currentRoute);
+    blocker.proceed();
   };
   const onClose = () => {
-    updateRouteHandlerState({ canTravel: false, pendingRoute: "" });
     setDialogOpen(false);
-    if (blocker.location) blocker.reset();
+    blocker.reset();
   };
 
   return (
