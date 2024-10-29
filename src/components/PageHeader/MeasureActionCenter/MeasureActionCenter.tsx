@@ -6,7 +6,16 @@ import { DeleteOutlined as DeleteIcon } from "@mui/icons-material";
 const MeasureActionCenter = () => {
   const [open, setOpen] = useState(false);
 
-  const actions = [{ icon: <DeleteIcon />, name: "Delete Measure" }];
+  const actions = [
+    {
+      icon: <DeleteIcon />,
+      name: "Delete Measure",
+      onClick: () => {
+        const event = new Event("delete-measure");
+        window.dispatchEvent(event);
+      },
+    },
+  ];
 
   return (
     <div
@@ -58,7 +67,10 @@ const MeasureActionCenter = () => {
             key={action.name}
             icon={action.icon}
             tooltipTitle={action.name}
-            onClick={() => setOpen(false)}
+            onClick={() => {
+              setOpen(false);
+              action.onClick();
+            }}
             sx={{
               boxShadow: "none",
               transition: "opacity 0s, visibility 0s",
