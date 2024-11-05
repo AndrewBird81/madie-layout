@@ -126,7 +126,7 @@ const PageHeader = () => {
             {featureFlags?.MeasureButtons && canEdit && (
               <div tw="pr-8" style={{ position: "relative" }}>
                 <div style={{ position: "absolute", top: 0, right: 0 }}>
-                  <MeasureActionCenter measure={measureState} />
+                  <MeasureActionCenter />
                 </div>
               </div>
             )}
