@@ -5,7 +5,7 @@ import { DeleteOutlined as DeleteIcon } from "@mui/icons-material";
 import FileUploadOutlinedIcon from "@mui/icons-material/FileUploadOutlined";
 import { Measure } from "@madie/madie-models";
 
-const MeasureActionCenter = (measure: any) => {
+const MeasureActionCenter = () => {
   const [open, setOpen] = useState(false);
 
   const actions = [
