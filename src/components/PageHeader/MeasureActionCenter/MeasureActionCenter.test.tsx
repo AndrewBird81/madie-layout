@@ -1,42 +1,49 @@
 import React from "react";
-import { render, fireEvent, screen, cleanup } from "@testing-library/react";
-import MeasureActionCenter from "./MeasureActionCenter"; // Adjust the import path as necessary
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import MeasureActionCenter from "./MeasureActionCenter";
 
-describe("MeasureActionCenter", () => {
-  afterEach(() => {
-    cleanup(); // Clear the rendered components after each test
-  });
-
-  test("renders without crashing", () => {
+describe("MeasureActionCenter Component", () => {
+  it("renders the action center", () => {
     render(<MeasureActionCenter />);
-    const actionCenter = screen.getByTestId("action-center");
-    expect(actionCenter).toBeInTheDocument();
+    expect(screen.getByTestId("action-center")).toBeInTheDocument();
   });
 
-  test("toggles open and close state on button click", () => {
+  it("should open action center on button click", () => {
     render(<MeasureActionCenter />);
     const actionCenterButton = screen.getByTestId("action-center-button");
-    const icon = screen.getByTestId("action-center-actual-icon");
-
-    expect(icon).toHaveStyle("transform: none");
-
     fireEvent.click(actionCenterButton);
-    expect(icon).toHaveStyle("transform: rotate(90deg)");
-
-    fireEvent.click(actionCenterButton);
-    expect(icon).toHaveStyle("transform: none");
+    expect(screen.getByTestId("DeleteMeasure")).toBeInTheDocument();
+    expect(screen.getByTestId("ExportMeasure")).toBeInTheDocument();
   });
 
-  test.skip("renders delete action when action center is clicked", () => {
-    //will update when delete is fully implemented
+  it("should trigger delete-measure event when 'Delete Measure' action is clicked", () => {
+    const dispatchEventSpy = jest.spyOn(window, "dispatchEvent");
     render(<MeasureActionCenter />);
 
     const actionCenterButton = screen.getByTestId("action-center-button");
     fireEvent.click(actionCenterButton);
+    const deleteMeasureButton = screen.getByTestId("DeleteMeasure");
+    fireEvent.click(deleteMeasureButton);
 
-    const deleteAction = screen.getByText("Delete Measure");
-    expect(deleteAction).toBeInTheDocument();
+    expect(dispatchEventSpy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        type: "delete-measure",
+      })
+    );
+  });
+  it("should trigger export-measure event when 'Export Measure' action is clicked", () => {
+    const dispatchEventSpy = jest.spyOn(window, "dispatchEvent");
+    render(<MeasureActionCenter />);
+
+    const actionCenterButton = screen.getByTestId("action-center-button");
     fireEvent.click(actionCenterButton);
-    expect(deleteAction).not.toBeInTheDocument();
+    const exportMeasureButton = screen.getByTestId("ExportMeasure");
+    fireEvent.click(exportMeasureButton);
+
+    expect(dispatchEventSpy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        type: "export-measure",
+      })
+    );
   });
 });
