@@ -2,6 +2,8 @@ import React, { useState } from "react";
 
 import { SpeedDial, SpeedDialAction } from "@mui/material";
 import { DeleteOutlined as DeleteIcon } from "@mui/icons-material";
+import FileUploadOutlinedIcon from "@mui/icons-material/FileUploadOutlined";
+import { Measure } from "@madie/madie-models";
 
 const MeasureActionCenter = () => {
   const [open, setOpen] = useState(false);
@@ -11,8 +13,16 @@ const MeasureActionCenter = () => {
       icon: <DeleteIcon />,
       name: "Delete Measure",
       onClick: () => {
-        const event = new Event("delete-measure");
-        window.dispatchEvent(event);
+        const eventDelete = new Event("delete-measure");
+        window.dispatchEvent(eventDelete);
+      },
+    },
+    {
+      icon: <FileUploadOutlinedIcon />,
+      name: "Export Measure",
+      onClick: () => {
+        const eventExport = new Event("export-measure");
+        window.dispatchEvent(eventExport);
       },
     },
   ];
@@ -67,6 +77,7 @@ const MeasureActionCenter = () => {
             key={action.name}
             icon={action.icon}
             tooltipTitle={action.name}
+            data-testid={action.name.replace(/\s/g, "")}
             onClick={() => {
               setOpen(false);
               action.onClick();
