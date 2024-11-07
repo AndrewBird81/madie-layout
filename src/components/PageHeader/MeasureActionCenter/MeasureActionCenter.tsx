@@ -5,27 +5,27 @@ import { DeleteOutlined as DeleteIcon } from "@mui/icons-material";
 import FileUploadOutlinedIcon from "@mui/icons-material/FileUploadOutlined";
 import { Measure } from "@madie/madie-models";
 
-const MeasureActionCenter = () => {
+const MeasureActionCenter = (canEdit: any) => {
   const [open, setOpen] = useState(false);
 
-  const actions = [
-    {
-      icon: <DeleteIcon />,
-      name: "Delete Measure",
-      onClick: () => {
-        const eventDelete = new Event("delete-measure");
-        window.dispatchEvent(eventDelete);
-      },
+  const deleteAction = {
+    icon: <DeleteIcon />,
+    name: "Delete Measure",
+    onClick: () => {
+      const eventDelete = new Event("delete-measure");
+      window.dispatchEvent(eventDelete);
     },
-    {
-      icon: <FileUploadOutlinedIcon />,
-      name: "Export Measure",
-      onClick: () => {
-        const eventExport = new Event("export-measure");
-        window.dispatchEvent(eventExport);
-      },
+  };
+  const exportAction = {
+    icon: <FileUploadOutlinedIcon />,
+    name: "Export Measure",
+    onClick: () => {
+      const eventExport = new Event("export-measure");
+      window.dispatchEvent(eventExport);
     },
-  ];
+  };
+
+  const actions = canEdit ? [exportAction, deleteAction] : [exportAction];
 
   return (
     <div
