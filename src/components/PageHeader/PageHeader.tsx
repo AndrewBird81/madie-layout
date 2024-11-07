@@ -126,7 +126,7 @@ const PageHeader = () => {
       {pathname.includes("edit") && pathname.includes("measures") && (
         <Fade in={measureState?.measureName !== undefined}>
           <div className="details">
-            {featureFlags?.MeasureButtons && canEdit && (
+            {featureFlags?.MeasureButtons && (
               <div tw="pr-8" style={{ position: "relative" }}>
                 <div style={{ position: "absolute", top: 0, right: 0 }}>
                   <MeasureActionCenter
