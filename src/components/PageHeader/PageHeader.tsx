@@ -7,9 +7,7 @@ import CreateNewMeasureDialog from "../NewMeasure/CreateNewMeasureDialog";
 import WafDialog from "../WafDialog/WafDialog";
 import MeasureActionCenter from "./MeasureActionCenter/MeasureActionCenter";
 import { Button } from "@madie/madie-design-system/dist/react";
-import SpeedDial, { SpeedDialProps } from "@mui/material/SpeedDial";
-import SpeedDialIcon from "@mui/material/SpeedDialIcon";
-import SpeedDialAction from "@mui/material/SpeedDialAction";
+
 import {
   measureStore,
   cqlLibraryStore,

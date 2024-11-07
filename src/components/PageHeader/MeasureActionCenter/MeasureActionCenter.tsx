@@ -2,13 +2,12 @@ import React, { useState, useEffect } from "react";
 
 import { SpeedDial, SpeedDialAction } from "@mui/material";
 
-import {
-  DeleteOutlined as DeleteIcon,
-  CallSplit as VersionIcon,
-  EventNote as DraftIcon,
-} from "@mui/icons-material";
+import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 
+import EditCalendarOutlinedIcon from "@mui/icons-material/EditCalendarOutlined";
 import FileUploadOutlinedIcon from "@mui/icons-material/FileUploadOutlined";
+import AccountTreeOutlinedIcon from "@mui/icons-material/AccountTreeOutlined";
+
 import { Measure } from "@madie/madie-models";
 
 interface PropTypes {
@@ -27,14 +26,6 @@ const MeasureActionCenter = (props: PropTypes) => {
   const getActionArray = (measure: Measure, canEdit: boolean): any[] => {
     const actions: any[] = [
       {
-        icon: <DeleteIcon />,
-        name: "Delete Measure",
-        onClick: () => {
-          const eventDelete = new Event("delete-measure");
-          window.dispatchEvent(eventDelete);
-        },
-      },
-      {
         icon: <FileUploadOutlinedIcon />,
         name: "Export Measure",
         onClick: () => {
@@ -46,7 +37,7 @@ const MeasureActionCenter = (props: PropTypes) => {
     if (canEdit) {
       if (measure?.measureMetaData.draft) {
         actions.push({
-          icon: <DeleteIcon />,
+          icon: <DeleteOutlinedIcon />,
           name: "Delete Measure",
           onClick: () => {
             const event = new Event("delete-measure");
@@ -54,7 +45,7 @@ const MeasureActionCenter = (props: PropTypes) => {
           },
         });
         actions.push({
-          icon: <VersionIcon />,
+          icon: <AccountTreeOutlinedIcon />,
           name: "Version Measure",
           onClick: () => {
             const event = new Event("version-measure");
@@ -64,7 +55,7 @@ const MeasureActionCenter = (props: PropTypes) => {
       }
       if (!measure?.measureMetaData.draft) {
         actions.push({
-          icon: <DraftIcon />,
+          icon: <EditCalendarOutlinedIcon />,
           name: "Draft Measure",
           onClick: () => {
             const event = new Event("draft-measure");
