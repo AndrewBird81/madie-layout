@@ -1,31 +1,71 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import { SpeedDial, SpeedDialAction } from "@mui/material";
-import { DeleteOutlined as DeleteIcon } from "@mui/icons-material";
+
+import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
+
+import EditCalendarOutlinedIcon from "@mui/icons-material/EditCalendarOutlined";
 import FileUploadOutlinedIcon from "@mui/icons-material/FileUploadOutlined";
+import AccountTreeOutlinedIcon from "@mui/icons-material/AccountTreeOutlined";
+
 import { Measure } from "@madie/madie-models";
 
-const MeasureActionCenter = (canEdit: any) => {
+interface PropTypes {
+  canEdit: boolean;
+  measure: Measure;
+}
+
+const MeasureActionCenter = (props: PropTypes) => {
   const [open, setOpen] = useState(false);
+  const [actions, setActions] = useState<Array<any>>([]);
 
-  const deleteAction = {
-    icon: <DeleteIcon />,
-    name: "Delete Measure",
-    onClick: () => {
-      const eventDelete = new Event("delete-measure");
-      window.dispatchEvent(eventDelete);
-    },
-  };
-  const exportAction = {
-    icon: <FileUploadOutlinedIcon />,
-    name: "Export Measure",
-    onClick: () => {
-      const eventExport = new Event("export-measure");
-      window.dispatchEvent(eventExport);
-    },
-  };
+  useEffect(() => {
+    setActions(getActionArray(props.measure, props.canEdit));
+  }, [props]);
 
-  const actions = canEdit ? [exportAction, deleteAction] : [exportAction];
+  const getActionArray = (measure: Measure, canEdit: boolean): any[] => {
+    const actions: any[] = [
+      {
+        icon: <FileUploadOutlinedIcon />,
+        name: "Export Measure",
+        onClick: () => {
+          const eventExport = new Event("export-measure");
+          window.dispatchEvent(eventExport);
+        },
+      },
+    ];
+    if (canEdit) {
+      if (measure?.measureMetaData.draft) {
+        actions.push({
+          icon: <DeleteOutlinedIcon />,
+          name: "Delete Measure",
+          onClick: () => {
+            const event = new Event("delete-measure");
+            window.dispatchEvent(event);
+          },
+        });
+        actions.push({
+          icon: <AccountTreeOutlinedIcon />,
+          name: "Version Measure",
+          onClick: () => {
+            const event = new Event("version-measure");
+            window.dispatchEvent(event);
+          },
+        });
+      }
+      if (!measure?.measureMetaData.draft) {
+        actions.push({
+          icon: <EditCalendarOutlinedIcon />,
+          name: "Draft Measure",
+          onClick: () => {
+            const event = new Event("draft-measure");
+            window.dispatchEvent(event);
+          },
+        });
+      }
+    }
+    return actions;
+  };
 
   return (
     <div

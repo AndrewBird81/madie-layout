@@ -7,9 +7,7 @@ import CreateNewMeasureDialog from "../NewMeasure/CreateNewMeasureDialog";
 import WafDialog from "../WafDialog/WafDialog";
 import MeasureActionCenter from "./MeasureActionCenter/MeasureActionCenter";
 import { Button } from "@madie/madie-design-system/dist/react";
-import SpeedDial, { SpeedDialProps } from "@mui/material/SpeedDial";
-import SpeedDialIcon from "@mui/material/SpeedDialIcon";
-import SpeedDialAction from "@mui/material/SpeedDialAction";
+
 import {
   measureStore,
   cqlLibraryStore,
@@ -27,6 +25,7 @@ import { useIsOverflow } from "./useIsOverflow";
 const PageHeader = () => {
   const { pathname } = useLocation();
   const [userFirstName, setUserFirstName] = useState<string>();
+
   useEffect(() => {
     window.addEventListener("storage", () =>
       setUserFirstName(window.localStorage.getItem("givenName"))
@@ -52,6 +51,7 @@ const PageHeader = () => {
   }, []);
 
   const [measureState, setMeasureState] = useState<any>(measureStore.state);
+
   useEffect(() => {
     const subscription = measureStore.subscribe(setMeasureState);
     return () => {
@@ -77,11 +77,12 @@ const PageHeader = () => {
     setWafOpen(false);
   };
   // dialog utilities just for delete measure
-  const canEdit = checkUserCanEdit(
+  const canEdit: boolean = checkUserCanEdit(
     measureState?.measureSet?.owner,
     measureState?.measureSet?.acls,
-    measureState?.measureMetaData?.draft
+    true // in this context we don't care if it's not a draft; because we still have some actions we can take
   );
+
   const makeUTCDate = (date) => {
     return `${
       date.getUTCMonth() + 1
@@ -126,7 +127,10 @@ const PageHeader = () => {
             {featureFlags?.MeasureButtons && (
               <div tw="pr-8" style={{ position: "relative" }}>
                 <div style={{ position: "absolute", top: 0, right: 0 }}>
-                  <MeasureActionCenter canEdit={canEdit} />
+                  <MeasureActionCenter
+                    canEdit={canEdit}
+                    measure={measureState}
+                  />
                 </div>
               </div>
             )}
