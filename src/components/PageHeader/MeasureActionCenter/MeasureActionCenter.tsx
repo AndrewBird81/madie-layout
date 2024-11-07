@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from "react";
 
 import { SpeedDial, SpeedDialAction } from "@mui/material";
+
 import {
   DeleteOutlined as DeleteIcon,
   CallSplit as VersionIcon,
   EventNote as DraftIcon,
 } from "@mui/icons-material";
 
+import FileUploadOutlinedIcon from "@mui/icons-material/FileUploadOutlined";
 import { Measure } from "@madie/madie-models";
+
 interface PropTypes {
   canEdit: boolean;
   measure: Measure;
@@ -22,7 +25,24 @@ const MeasureActionCenter = (props: PropTypes) => {
   }, [props]);
 
   const getActionArray = (measure: Measure, canEdit: boolean): any[] => {
-    const actions: any[] = [];
+    const actions: any[] = [
+      {
+        icon: <DeleteIcon />,
+        name: "Delete Measure",
+        onClick: () => {
+          const eventDelete = new Event("delete-measure");
+          window.dispatchEvent(eventDelete);
+        },
+      },
+      {
+        icon: <FileUploadOutlinedIcon />,
+        name: "Export Measure",
+        onClick: () => {
+          const eventExport = new Event("export-measure");
+          window.dispatchEvent(eventExport);
+        },
+      },
+    ];
     if (canEdit) {
       if (measure?.measureMetaData.draft) {
         actions.push({
@@ -101,26 +121,25 @@ const MeasureActionCenter = (props: PropTypes) => {
         open={open}
         onClick={() => setOpen((prevOpen) => !prevOpen)}
       >
-        {actions.map((action) => {
-          return (
-            <SpeedDialAction
-              key={action.name}
-              icon={action.icon}
-              tooltipTitle={action.name}
-              onClick={() => {
-                setOpen(false);
-                action.onClick();
-              }}
-              sx={{
-                boxShadow: "none",
-                transition: "opacity 0s, visibility 0s",
-                margin: 0,
-                marginRight: 1,
-                transitionDelay: "0s",
-              }}
-            />
-          );
-        })}
+        {actions.map((action) => (
+          <SpeedDialAction
+            key={action.name}
+            icon={action.icon}
+            tooltipTitle={action.name}
+            data-testid={action.name.replace(/\s/g, "")}
+            onClick={() => {
+              setOpen(false);
+              action.onClick();
+            }}
+            sx={{
+              boxShadow: "none",
+              transition: "opacity 0s, visibility 0s",
+              margin: 0,
+              marginRight: 1,
+              transitionDelay: "0s",
+            }}
+          />
+        ))}
       </SpeedDial>
     </div>
   );
