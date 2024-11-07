@@ -1,21 +1,60 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import { SpeedDial, SpeedDialAction } from "@mui/material";
-import { DeleteOutlined as DeleteIcon } from "@mui/icons-material";
+import {
+  DeleteOutlined as DeleteIcon,
+  CallSplit as VersionIcon,
+  EventNote as DraftIcon,
+} from "@mui/icons-material";
 
-const MeasureActionCenter = () => {
+import { Measure } from "@madie/madie-models";
+interface PropTypes {
+  canEdit: boolean;
+  measure: Measure;
+}
+
+const MeasureActionCenter = (props: PropTypes) => {
   const [open, setOpen] = useState(false);
+  const [actions, setActions] = useState<Array<any>>([]);
 
-  const actions = [
-    {
-      icon: <DeleteIcon />,
-      name: "Delete Measure",
-      onClick: () => {
-        const event = new Event("delete-measure");
-        window.dispatchEvent(event);
-      },
-    },
-  ];
+  useEffect(() => {
+    setActions(getActionArray(props.measure, props.canEdit));
+  }, [props]);
+
+  const getActionArray = (measure: Measure, canEdit: boolean): any[] => {
+    const actions: any[] = [];
+    if (canEdit) {
+      if (measure?.measureMetaData.draft) {
+        actions.push({
+          icon: <DeleteIcon />,
+          name: "Delete Measure",
+          onClick: () => {
+            const event = new Event("delete-measure");
+            window.dispatchEvent(event);
+          },
+        });
+        actions.push({
+          icon: <VersionIcon />,
+          name: "Version Measure",
+          onClick: () => {
+            const event = new Event("version-measure");
+            window.dispatchEvent(event);
+          },
+        });
+      }
+      if (!measure?.measureMetaData.draft) {
+        actions.push({
+          icon: <DraftIcon />,
+          name: "Draft Measure",
+          onClick: () => {
+            const event = new Event("draft-measure");
+            window.dispatchEvent(event);
+          },
+        });
+      }
+    }
+    return actions;
+  };
 
   return (
     <div
@@ -62,24 +101,26 @@ const MeasureActionCenter = () => {
         open={open}
         onClick={() => setOpen((prevOpen) => !prevOpen)}
       >
-        {actions.map((action) => (
-          <SpeedDialAction
-            key={action.name}
-            icon={action.icon}
-            tooltipTitle={action.name}
-            onClick={() => {
-              setOpen(false);
-              action.onClick();
-            }}
-            sx={{
-              boxShadow: "none",
-              transition: "opacity 0s, visibility 0s",
-              margin: 0,
-              marginRight: 1,
-              transitionDelay: "0s",
-            }}
-          />
-        ))}
+        {actions.map((action) => {
+          return (
+            <SpeedDialAction
+              key={action.name}
+              icon={action.icon}
+              tooltipTitle={action.name}
+              onClick={() => {
+                setOpen(false);
+                action.onClick();
+              }}
+              sx={{
+                boxShadow: "none",
+                transition: "opacity 0s, visibility 0s",
+                margin: 0,
+                marginRight: 1,
+                transitionDelay: "0s",
+              }}
+            />
+          );
+        })}
       </SpeedDial>
     </div>
   );
