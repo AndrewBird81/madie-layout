@@ -9,6 +9,7 @@ import FileUploadOutlinedIcon from "@mui/icons-material/FileUploadOutlined";
 import AccountTreeOutlinedIcon from "@mui/icons-material/AccountTreeOutlined";
 
 import { Measure } from "@madie/madie-models";
+import { blue, red } from "@mui/material/colors";
 
 interface PropTypes {
   canEdit: boolean;
@@ -26,7 +27,7 @@ const MeasureActionCenter = (props: PropTypes) => {
   const getActionArray = (measure: Measure, canEdit: boolean): any[] => {
     const actions: any[] = [
       {
-        icon: <FileUploadOutlinedIcon />,
+        icon: <FileUploadOutlinedIcon sx={{ color: blue[500] }} />,
         name: "Export Measure",
         onClick: () => {
           const eventExport = new Event("export-measure");
@@ -37,7 +38,7 @@ const MeasureActionCenter = (props: PropTypes) => {
     if (canEdit) {
       if (measure?.measureMetaData.draft) {
         actions.push({
-          icon: <DeleteOutlinedIcon />,
+          icon: <DeleteOutlinedIcon sx={{ color: red[500] }} />,
           name: "Delete Measure",
           onClick: () => {
             const event = new Event("delete-measure");
@@ -45,7 +46,7 @@ const MeasureActionCenter = (props: PropTypes) => {
           },
         });
         actions.push({
-          icon: <AccountTreeOutlinedIcon />,
+          icon: <AccountTreeOutlinedIcon sx={{ color: blue[500] }} />,
           name: "Version Measure",
           onClick: () => {
             const event = new Event("version-measure");
@@ -55,7 +56,7 @@ const MeasureActionCenter = (props: PropTypes) => {
       }
       if (!measure?.measureMetaData.draft) {
         actions.push({
-          icon: <EditCalendarOutlinedIcon />,
+          icon: <EditCalendarOutlinedIcon sx={{ color: blue[500] }} />,
           name: "Draft Measure",
           onClick: () => {
             const event = new Event("draft-measure");
