@@ -23,16 +23,26 @@ const RouteChangePrompt = () => {
     };
   }, []);
 
+  const isTopLevel = ({ pathname }) => {
+    const singleRoutePattern = /^\/[^\/]+\/?$/;
+    const detailsClickPattern = /^\/measures\/[a-f0-9]{24}\/edit\/details\/$/;
+    // should return true if path matches singleRoutePattern or detailsClickPattern
+    return (
+      singleRoutePattern.test(pathname) || detailsClickPattern.test(pathname)
+    );
+  };
   const blocker = useBlocker(({ currentLocation, nextLocation }) => {
-    if (
-      !routeHandlerState?.canTravel &&
-      currentLocation.pathname !== nextLocation.pathname
-    ) {
-      setDialogOpen(true);
-      return true;
+    if (isTopLevel(nextLocation)) {
+      if (
+        !routeHandlerState?.canTravel &&
+        currentLocation.pathname !== nextLocation.pathname
+      ) {
+        setDialogOpen(true);
+        return true;
+      }
+      setDialogOpen(false);
+      return false;
     }
-    setDialogOpen(false);
-    return false;
   });
 
   const onContinue = () => {
