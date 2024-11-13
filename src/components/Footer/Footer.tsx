@@ -83,7 +83,7 @@ const Footer = () => {
           </li>
           <li className="nav-link">
             <a
-              href="https://www.hhs.gov/web/governance/digital-strategy/it-policy-archive/hhs-rules-of-behavior-for-the-use-of-hhs-information-and-it-resources-policy.html"
+              href="https://security.cms.gov/policy-guidance/hhs-policy-rules-behavior-use-information-it-resources"
               aria-label="Rules of Behavior"
               target="_blank"
             >
