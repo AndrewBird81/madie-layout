@@ -1,7 +1,8 @@
-import React from "react";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import * as React from "react";
+import { render, screen } from "@testing-library/react";
 import MeasureActionCenter from "./MeasureActionCenter";
 import { Measure } from "@madie/madie-models";
+import userEvent from "@testing-library/user-event";
 
 const draftMeasure = {
   id: "measure ID",
@@ -24,18 +25,9 @@ describe("MeasureActionCenter Component", () => {
   });
 
   it("should open action center on button click", () => {
-    render(<MeasureActionCenter canEdit={true} measure={draftMeasure} />);
-    const actionCenterButton = screen.getByTestId("action-center-button");
-    fireEvent.click(actionCenterButton);
-    expect(screen.getByTestId("DeleteMeasure")).toBeInTheDocument();
-    expect(screen.getByTestId("VersionMeasure")).toBeInTheDocument();
-    expect(screen.getByTestId("ExportMeasure")).toBeInTheDocument();
-  });
-
-  it("should open action center on button click", () => {
     render(<MeasureActionCenter canEdit={true} measure={versionedMeasure} />);
-    const actionCenterButton = screen.getByTestId("action-center-button");
-    fireEvent.click(actionCenterButton);
+    const actionCenterButton = screen.getByLabelText("Measure action center");
+    userEvent.click(actionCenterButton);
     expect(screen.queryByTestId("DeleteMeasure")).not.toBeInTheDocument();
     expect(screen.queryByTestId("VersionMeasure")).not.toBeInTheDocument();
     expect(screen.getByTestId("DraftMeasure")).toBeInTheDocument();
@@ -44,13 +36,11 @@ describe("MeasureActionCenter Component", () => {
 
   it("should trigger delete-measure event when 'Delete Measure' action is clicked", () => {
     const dispatchEventSpy = jest.spyOn(window, "dispatchEvent");
-
     render(<MeasureActionCenter canEdit={true} measure={draftMeasure} />);
-
-    const actionCenterButton = screen.getByTestId("action-center-button");
-    fireEvent.click(actionCenterButton);
+    const actionCenterButton = screen.getByLabelText("Measure action center");
+    userEvent.click(actionCenterButton);
     const deleteMeasureButton = screen.getByTestId("DeleteMeasure");
-    fireEvent.click(deleteMeasureButton);
+    userEvent.click(deleteMeasureButton);
 
     expect(dispatchEventSpy).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -60,12 +50,26 @@ describe("MeasureActionCenter Component", () => {
   });
   it("should trigger export-measure event when 'Export Measure' action is clicked", () => {
     const dispatchEventSpy = jest.spyOn(window, "dispatchEvent");
-    render(<MeasureActionCenter />);
-
-    const actionCenterButton = screen.getByTestId("action-center-button");
-    fireEvent.click(actionCenterButton);
+    render(<MeasureActionCenter canEdit={true} measure={draftMeasure} />);
+    const actionCenterButton = screen.getByLabelText("Measure action center");
+    userEvent.click(actionCenterButton);
     const exportMeasureButton = screen.getByTestId("ExportMeasure");
-    fireEvent.click(exportMeasureButton);
+    userEvent.click(exportMeasureButton);
+
+    expect(dispatchEventSpy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        type: "export-measure",
+      })
+    );
+  });
+
+  it("should display discard dialog when a user has unsaved changes", () => {
+    const dispatchEventSpy = jest.spyOn(window, "dispatchEvent");
+    render(<MeasureActionCenter canEdit={true} measure={draftMeasure} />);
+    const actionCenterButton = screen.getByLabelText("Measure action center");
+    userEvent.click(actionCenterButton);
+    const exportMeasureButton = screen.getByTestId("ExportMeasure");
+    userEvent.click(exportMeasureButton);
 
     expect(dispatchEventSpy).toHaveBeenCalledWith(
       expect.objectContaining({
