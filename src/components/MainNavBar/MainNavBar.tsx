@@ -6,44 +6,14 @@ import { useOktaAuth } from "@okta/okta-react";
 import { NavLink, useLocation } from "react-router-dom";
 import UserProfile from "./UserProfile";
 import UserAvatar from "./UserAvatar";
-import UMLSDialog from "./UMLSDialog";
 import { Tabs, Tab, Toast } from "@madie/madie-design-system/dist/react";
-import { useTerminologyServiceApi } from "@madie/madie-util";
 import "./MainNavBar.scss";
+import UserUMLS from "./UserUMLS";
 
 const MainNavBar = () => {
-  const [dOpen, setDOpen] = useState<boolean>(false);
-  const [toastOpen, setToastOpen] = useState<boolean>(false);
-  const [toastMessage, setToastMessage] = useState<string>("");
-  const [toastType, setToastType] = useState<string>("danger");
-  const terminologyServiceApi = useTerminologyServiceApi();
-  const [isLoggedInToUMLS, setIsLoggedInToUMLS] = useState<boolean>(undefined);
   const [headerText, setHeaderText] = useState(true);
 
   const { authState } = useOktaAuth();
-  useEffect(() => {
-    if (authState?.isAuthenticated && !isLoggedInToUMLS) {
-      terminologyServiceApi
-        .checkLogin()
-        .then((value) => {
-          setIsLoggedInToUMLS(true);
-        })
-        .catch((err) => {
-          handleToast("danger", "Please sign in to UMLS.", true);
-        });
-    }
-  }, [authState?.isAuthenticated]);
-
-  const onToastClose = () => {
-    setToastType("danger");
-    setToastMessage("");
-    setToastOpen(false);
-  };
-  const handleToast = (type, message, open) => {
-    setToastType(type);
-    setToastMessage(message);
-    setToastOpen(open);
-  };
 
   let resizeWindow = () => {
     const headerWidth = document.getElementById("madie-header").clientWidth;
@@ -151,15 +121,7 @@ const MainNavBar = () => {
                     }}
                   />
                 </Tabs>
-                <li className="activity-button">
-                  <button
-                    onClick={() => setDOpen(!isLoggedInToUMLS)}
-                    data-testid="UMLS-connect-button"
-                  >
-                    <div className={isLoggedInToUMLS ? "active" : "inactive"} />
-                    {isLoggedInToUMLS ? "UMLS Active" : "Connect to UMLS"}
-                  </button>
-                </li>
+                <UserUMLS />
                 <li id="main-nav-bar-tab-user-avatar">
                   <UserAvatar />
                 </li>
@@ -171,29 +133,6 @@ const MainNavBar = () => {
           </DropMenu>
         </DropDown>
       </header>
-      <UMLSDialog
-        open={dOpen}
-        handleClose={() => setDOpen(false)}
-        handleToast={handleToast}
-        setIsLoggedInToUMLS={setIsLoggedInToUMLS}
-      />
-      <Toast
-        toastKey="UMLS-login-toast"
-        toastType={toastType}
-        testId={
-          toastType === "danger"
-            ? "UMLS-login-generic-error-text"
-            : "UMLS-login-success-text"
-        }
-        open={toastOpen}
-        message={toastMessage}
-        onClose={onToastClose}
-        closeButtonProps={{
-          "data-testid": "close-error-button",
-        }}
-        autoHideDuration={4000}
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}
-      />
     </nav>
   );
 };

@@ -98,6 +98,7 @@ declare module "@madie/madie-util" {
     constructor(baseUrl: string, getAccessToken: () => string);
     checkLogin(): Promise<Boolean>;
     loginUMLS(apiKey: string): Promise<string>;
+    logoutUMLS(): Promise<Boolean>;
   }
   export function useTerminologyServiceApi(): TerminologyServiceApi;
 
