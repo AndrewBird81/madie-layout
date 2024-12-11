@@ -17,7 +17,7 @@ const UserUMLS = () => {
   const { authState } = useOktaAuth();
   const [isLoggedInToUMLS, setIsLoggedInToUMLS] = useState<boolean>(undefined);
   const terminologyServiceApi = useTerminologyServiceApi();
-  const [dOpen, setDOpen] = useState<boolean>(false);
+  const [umlsDialogOpen, setUmlsDialogOpen] = useState<boolean>(false);
   const [toastOpen, setToastOpen] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string>("");
   const [toastType, setToastType] = useState<string>("danger");
@@ -117,7 +117,7 @@ const UserUMLS = () => {
           >
             <li className="activity-button">
               <button
-                onClick={() => setDOpen(!isLoggedInToUMLS)}
+                onClick={() => setUmlsDialogOpen(!isLoggedInToUMLS)}
                 data-testid="UMLS-connect-button"
               >
                 <div className={isLoggedInToUMLS ? "active" : "inactive"} />
@@ -138,8 +138,8 @@ const UserUMLS = () => {
       </FormControl>
 
       <UMLSDialog
-        open={dOpen}
-        handleClose={() => setDOpen(false)}
+        open={umlsDialogOpen}
+        handleClose={() => setUmlsDialogOpen(false)}
         handleToast={handleToast}
         setIsLoggedInToUMLS={setIsLoggedInToUMLS}
       />
