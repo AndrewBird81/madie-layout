@@ -1,28 +1,17 @@
 import "@testing-library/jest-dom";
 
 import React from "react";
-import {
-  render,
-  fireEvent,
-  waitFor,
-  cleanup,
-  // screen,
-} from "@testing-library/react";
+import { render, fireEvent, waitFor, cleanup } from "@testing-library/react";
 import { describe, expect, test } from "@jest/globals";
 import { act } from "react-dom/test-utils";
 import { MemoryRouter } from "react-router";
 
 import { useOktaAuth } from "@okta/okta-react";
 import MainNavBar from "./MainNavBar";
-// import userEvent from "@testing-library/user-event";
-// import axios from "axios";
 import {
   useTerminologyServiceApi,
   TerminologyServiceApi,
 } from "@madie/madie-util";
-
-// jest.mock("axios");
-// const mockedAxios = axios as jest.Mocked<typeof axios>;
 
 jest.mock("@okta/okta-react", () => ({
   useOktaAuth: jest.fn(),
@@ -78,10 +67,6 @@ beforeEach(() => {
 });
 afterEach(cleanup);
 describe("MainNavBar Component", () => {
-  // const mockFormikInfo = {
-  //   apiKey: "mfjdiajenfjgitjeandpsoekrmmanritjehs",
-  // };
-
   test("Selecting different navigation routes, provides elements with classes as expected.", async () => {
     await act(async () => {
       const { findByTestId } = await render(
