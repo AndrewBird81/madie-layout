@@ -386,7 +386,7 @@ describe("User UMLS Connection", () => {
       const userInputSelect = await getByTestId("user-umls-input");
       fireEvent.change(userInputSelect, { target: { value: "LogoutUMLS" } });
       fireEvent.blur(getByTestId("user-umls-select"));
-      expect(getByTestId("delete-dialog")).toBeInTheDocument();
+      expect(getByTestId("confirm-dialog")).toBeInTheDocument();
     });
   });
 
@@ -413,8 +413,8 @@ describe("User UMLS Connection", () => {
       const userInputSelect = await getByTestId("user-umls-input");
       fireEvent.change(userInputSelect, { target: { value: "LogoutUMLS" } });
       fireEvent.blur(getByTestId("user-umls-select"));
-      expect(getByTestId("delete-dialog")).toBeInTheDocument();
-      const continueBtn = getByTestId("delete-dialog-continue-button");
+      expect(getByTestId("confirm-dialog")).toBeInTheDocument();
+      const continueBtn = getByTestId("confirm-dialog-continue-button");
       expect(continueBtn).toBeInTheDocument();
 
       fireEvent.click(continueBtn);
@@ -445,8 +445,8 @@ describe("User UMLS Connection", () => {
       const userInputSelect = await getByTestId("user-umls-input");
       fireEvent.change(userInputSelect, { target: { value: "LogoutUMLS" } });
       fireEvent.blur(getByTestId("user-umls-select"));
-      expect(getByTestId("delete-dialog")).toBeInTheDocument();
-      const cancelBtn = getByTestId("delete-dialog-cancel-button");
+      expect(getByTestId("confirm-dialog")).toBeInTheDocument();
+      const cancelBtn = getByTestId("confirm-dialog-cancel-button");
       expect(cancelBtn).toBeInTheDocument();
 
       fireEvent.click(cancelBtn);
@@ -479,8 +479,8 @@ describe("User UMLS Connection", () => {
       const userInputSelect = await getByTestId("user-umls-input");
       fireEvent.change(userInputSelect, { target: { value: "LogoutUMLS" } });
       fireEvent.blur(getByTestId("user-umls-select"));
-      expect(getByTestId("delete-dialog")).toBeInTheDocument();
-      const continueBtn = getByTestId("delete-dialog-continue-button");
+      expect(getByTestId("confirm-dialog")).toBeInTheDocument();
+      const continueBtn = getByTestId("confirm-dialog-continue-button");
       expect(continueBtn).toBeInTheDocument();
 
       fireEvent.click(continueBtn);

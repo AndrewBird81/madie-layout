@@ -7,7 +7,7 @@ import { MenuItem } from "@mui/material";
 import UMLSDialog from "./UMLSDialog";
 import {
   Toast,
-  MadieDeleteDialog,
+  MadieConfirmDialog,
 } from "@madie/madie-design-system/dist/react";
 import { useOktaAuth } from "@okta/okta-react";
 import { useTerminologyServiceApi } from "@madie/madie-util";
@@ -161,15 +161,17 @@ const UserUMLS = () => {
         anchorOrigin={{ vertical: "top", horizontal: "right" }}
       />
 
-      <MadieDeleteDialog
+      <MadieConfirmDialog
         open={confirmDialogOpen}
         onContinue={() => {
           logoutUMLS();
           setConfirmDialogOpen(false);
         }}
         onClose={() => setConfirmDialogOpen(false)}
+        warning="You are about to Sign Out from UMLS. You will need to enter your UMLS API key to log back in."
         dialogTitle="Are you sure?"
-        name={"log out of UMLS"}
+        name="log out of UMLS"
+        action="confirm"
       />
     </div>
   );
