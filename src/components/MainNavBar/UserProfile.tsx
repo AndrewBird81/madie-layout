@@ -5,8 +5,9 @@ import tw, { styled } from "twin.macro";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { MenuItem } from "@mui/material";
-const FormControl = styled.section(() => [tw`ml-2`]);
-
+const FormControl = styled.section(() => ({
+  marginLeft: "10px",
+}));
 function UserProfile() {
   const { oktaAuth } = useOktaAuth();
   const [userInfo, setUserInfo] = useState(null);
