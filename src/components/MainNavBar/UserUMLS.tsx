@@ -74,7 +74,6 @@ const UserUMLS = () => {
           inputProps={{ "data-testid": "user-umls-input" }}
           sx={{
             height: "32px",
-            width: "200px",
             borderColor: "transparent",
             "& .Mui-focused": {
               borderColor: "transparent",
